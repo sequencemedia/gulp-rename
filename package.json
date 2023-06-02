@@ -1,40 +1,59 @@
 {
-  "name": "gulp-rename",
-  "version": "2.0.0",
-  "description": "Rename files",
+  "name": "@sequencemedia/gulp-rename",
+  "version": "1.0.0",
+  "description": "Rename files in Gulp",
   "keywords": [
-    "gulpplugin"
+    "gulp plugin"
   ],
-  "homepage": "https://github.com/hparra/gulp-rename",
-  "bugs": "https://github.com/hparra/gulp-rename/issues",
+  "main": "./index.mjs",
+  "type": "module",
   "author": {
-    "name": "Hector Guillermo Parra Alvarez",
-    "email": "hector@hectorparra.com",
-    "url": "https://github.com/hparra"
+    "name": "Jonathan Perry",
+    "email": "jonathanperry@sequencemedia.net",
+    "url": "https://sequencemedia.net"
   },
-  "main": "./index.js",
-  "files": [
-    "index.js"
+  "contributors": [
+    {
+      "name": "Hector Guillermo Parra Alvarez",
+      "email": "hector@hectorparra.com",
+      "url": "https://github.com/hparra"
+    }
   ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.5.0"
+  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/hparra/gulp-rename.git"
+    "url": "git://github.com/sequencemedia/gulp-rename.git"
   },
+  "homepage": "https://github.com/sequencemedia/gulp-rename",
+  "bugs": "https://github.com/sequencemedia/gulp-rename/issues",
   "scripts": {
-    "pretest": "prettier --single-quote --write index.js test/**/*.js",
-    "test": "mocha"
+    "lint": "eslint . --ext .mjs --ext .cjs",
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
-    "map-stream": "^0.0.7",
-    "mocha": "^6.0.0",
-    "prettier": "^1.19.1",
-    "should": "^13.2.3",
-    "vinyl": "^2.0.0"
+    "@babel/core": "^7.22.1",
+    "@babel/eslint-parser": "^7.21.8",
+    "@babel/preset-env": "^7.22.4",
+    "@sequencemedia/hooks": "^1.0.431",
+    "eslint": "^8.41.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3"
   },
-  "engines": {
-    "node": ">=4"
+  "files": [
+    "LICENSE",
+    "index.mjs"
+  ],
+  "imports": {
+    "#gulp-rename": "./index.mjs"
   },
-  "license": "MIT"
+  "exports": {
+    ".": "./index.mjs"
+  }
 }
