@@ -6,14 +6,14 @@ import path from 'node:path'
 export default (param, options = {}) => {
   const streamTransform = new Transform({ objectMode: true })
 
-  function parsePath (path) {
+  function parsePath (filePath) {
     const extname = options.multiExt
-      ? path.basename(path).slice(path.basename(path).indexOf('.'))
-      : path.extname(path)
+      ? path.basename(filePath).slice(path.basename(filePath).indexOf('.'))
+      : path.extname(filePath)
 
     return {
-      dirname: path.dirname(path),
-      basename: path.basename(path, extname),
+      dirname: path.dirname(filePath),
+      basename: path.basename(filePath, extname),
       extname
     }
   }
