@@ -55,5 +55,8 @@
   },
   "exports": {
     ".": "./index.mjs"
+  },
+  "dependencies": {
+    "plugin-error": "^2.0.1"
   }
 }

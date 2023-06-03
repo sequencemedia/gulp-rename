@@ -2,14 +2,17 @@ import {
   Transform
 } from 'node:stream'
 import path from 'node:path'
+import PluginError from 'plugin-error'
 
-export default (param, options = {}) => {
-  const streamTransform = new Transform({ objectMode: true })
+const PLUGIN_NAME = '@sequencemedia/gulp-rename'
 
+function getTransformFor (parameter, options) {
   function parsePath (filePath) {
-    const extname = options.multiExt
-      ? path.basename(filePath).slice(path.basename(filePath).indexOf('.'))
-      : path.extname(filePath)
+    const extname = (
+      options.multiExt
+        ? path.basename(filePath).slice(path.basename(filePath).indexOf('.'))
+        : path.extname(filePath)
+    )
 
     return {
       dirname: path.dirname(filePath),
@@ -18,39 +21,42 @@ export default (param, options = {}) => {
     }
   }
 
-  streamTransform._transform = function (originalFile, encoding, done) {
-    const file = originalFile.clone({ contents: false })
-    let parsedPath = parsePath(file.relative)
+  return function transform (sourceFile, encoding, done) {
+    const file = sourceFile.clone({ contents: false })
+
     let filePath
 
-    const type = typeof param
+    const parsedPath = parsePath(file.relative)
 
-    if (type === 'string' && param !== '') {
-      filePath = param
-    } else if (type === 'function') {
-      const newParsedPath = param(parsedPath, file)
-      if (typeof newParsedPath === 'object' && newParsedPath !== null) {
-        parsedPath = newParsedPath
-      }
+    const type = typeof parameter
 
-      filePath = path.join(
-        parsedPath.dirname,
-        parsedPath.basename + parsedPath.extname
-      )
-    } else if (type === 'object' && param !== undefined && param !== null) {
-      const dirname = 'dirname' in param ? param.dirname : parsedPath.dirname
-      const prefix = param.prefix || ''
-      const suffix = param.suffix || ''
-      const basename = 'basename' in param ? param.basename : parsedPath.basename
-      const extname = 'extname' in param ? param.extname : parsedPath.extname
-
-      filePath = path.join(dirname, prefix + basename + suffix + extname)
+    if (type === 'string' && parameter) {
+      filePath = parameter
     } else {
-      done(
-        new Error('Unsupported renaming parameter type supplied'),
-        undefined
-      )
-      return
+      if (type === 'function') {
+        const {
+          dirname,
+          basename,
+          extname
+        } = parameter(parsedPath, file) ?? parsedPath
+
+        filePath = path.join(dirname, basename + extname)
+      } else {
+        if (type === 'object' && parameter) {
+          const {
+            dirname = parsedPath.dirname,
+            prefix = '',
+            suffix = '',
+            basename = parsedPath.basename,
+            extname = parsedPath.extname
+          } = parameter
+
+          filePath = path.join(dirname, prefix + basename + suffix + extname)
+        } else {
+          done(new PluginError(PLUGIN_NAME, 'Unsupported parameter type'))
+          return
+        }
+      }
     }
 
     file.path = path.join(file.base, filePath)
@@ -62,6 +68,10 @@ export default (param, options = {}) => {
 
     done(null, file)
   }
+}
 
-  return streamTransform
+export default function gulpRename (parameter, options = {}) {
+  const transform = getTransformFor(parameter, options)
+
+  return new Transform({ transform, objectMode: true })
 }
