@@ -34,6 +34,9 @@
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "plugin-error": "^2.0.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.22.1",
     "@babel/eslint-parser": "^7.21.8",
@@ -55,8 +58,5 @@
   },
   "exports": {
     ".": "./index.mjs"
-  },
-  "dependencies": {
-    "plugin-error": "^2.0.1"
   }
 }
