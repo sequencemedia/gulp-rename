@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/gulp-rename",
-  "version": "1.0.242",
+  "version": "1.0.243",
   "description": "Rename files in Gulp",
   "keywords": [
     "gulp plugin"
